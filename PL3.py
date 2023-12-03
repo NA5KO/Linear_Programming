@@ -1,81 +1,110 @@
 import sys
-
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import (
-    QApplication,
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QTableWidget,
-)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QPixmap, QPalette, QBrush, QIntValidator, QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 
 
-class MyWindow(QWidget):
+class ExerciseSolver(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+        self.input_boxes = []
 
-        # Créer la fenêtre
-        self.setWindowTitle("Ma fenêtre")
-        self.resize(300, 200)
+        self.init_ui()
 
-        # Créer un layout vertical
-        layout = QVBoxLayout()
+    def init_ui(self):
+        # Set the background image
+        background_image_path = "background_image.jpg"
+        self.set_background_image(background_image_path)
 
-        # Créer la première section
-        titre = QLabel("Enonce")
-        titre.setFont(QFont("Arial", 24))
-        layout.addWidget(titre)
+        # Big title "Enoncé"
+        title_label = QLabel("Enoncé")
+        title_label.setFont(QFont("Roboto", 20))
+        title_label.setStyleSheet("color: red;")
 
-        # Créer la deuxième section
-        introduction = QLabel("Introduction à l'exercice")
-        layout.addWidget(introduction)
-        tableau = QTableWidget(8, 6)
-        tableau.setHorizontalHeaderLabels(["Col 1", "Col 2", "Col 3", "Col 4", "Col 5", "Col 6"])
-        tableau.setVerticalHeaderLabels(["Ligne 1", "Ligne 2", "Ligne 3", "Ligne 4", "Ligne 5", "Ligne 6", "Ligne 7", "Ligne 8"])
-        layout.addWidget(tableau)
+        # Exercise text
+        exercise_text = "Un bureau de poste a des besoins en personnel lors des sept jours de la semaine\nDéterminer la planification permettant de satisfaire les besoins du bureau en recourant\nau minimum d’employés\ntout en sachant que chaque employé doit travailler pendant\ncinq jours consécutifs avant de prendre deux jours de\ncongé"
+        exercise_label = QLabel(exercise_text)
 
-        # Créer la troisième section
-        phrase1 = QLabel("Phrase 1")
-        layout.addWidget(phrase1)
-        input1 = QLineEdit()
-        layout.addWidget(input1)
-        phrase2 = QLabel("Phrase 2")
-        layout.addWidget(phrase2)
-        input2 = QLineEdit()
-        layout.addWidget(input2)
-        phrase3 = QLabel("Phrase 3")
-        layout.addWidget(phrase3)
-        input3 = QLineEdit()
-        layout.addWidget(input3)
+        exercise_label.setFont(QFont("Roboto", 12))
+        exercise_label.setStyleSheet("color: white;")
 
-        # Créer la quatrième section
-        bouton = QPushButton("Résoudre")
-        layout.addWidget(bouton)
+        # Sentences and input boxes
+        jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
-        # Définir le layout
-        self.setLayout(layout)
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
 
-        # Connecter l'événement de clic du bouton
-        #bouton.clicked.connect(self.on_click)
+        for i in range(7):
+            sentence_label = QLabel(f"Nombre d'employés le {jours[i]}: ")
+            sentence_label.setFont(QFont("Roboto", 15))
+            sentence_label.setStyleSheet("color: white;")
 
-    #def on_click(self):
-        # Récupération des valeurs des entrées
-        phrase1 = input1.text()
-        phrase2 = input2.text()
-        phrase3 = input3.text()
+            input_box = QLineEdit(self)
+            input_box.setMaxLength(3)
+            input_box.setMaximumWidth(50)
+            input_box.setAlignment(Qt.AlignCenter)
+            input_box.setValidator(QIntValidator(1, 999))
 
-        # Traitement des données
-        # ...
+            self.input_boxes.append(input_box)
 
-        # Affichage des résultats
-        # ...
+            layout.addWidget(sentence_label, alignment=Qt.AlignCenter)
+            layout.addWidget(input_box, alignment=Qt.AlignCenter)
+
+        # Solve button with dark blue theme
+        solve_button = QPushButton("Solve")
+        solve_button.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 5px; font-size: 14pt; padding: 10px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
+        solve_button.clicked.connect(self.solve_button_clicked)
+
+        # Main layout with vertical alignment
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(title_label, alignment=Qt.AlignCenter)
+        main_layout.setSpacing(10)
+        main_layout.addWidget(exercise_label, alignment=Qt.AlignCenter)
+        main_layout.addWidget(widget, alignment=Qt.AlignCenter)
+        main_layout.addWidget(solve_button, alignment=Qt.AlignCenter)
+        main_layout.setContentsMargins(0, 0, 0, 0)
 
 
-if __name__ == "__main__":
+        # Set the main layout and window properties
+        central_widget = QWidget()
+        central_widget.setLayout(main_layout)
+        self.setCentralWidget(central_widget)
+        self.setWindowIcon(QIcon("star.jpg"))
+        self.setWindowTitle("Exercise Solver")
+        self.setGeometry(100, 100, 800, 600)
+        self.show()
+
+    def solve_button_clicked(self):
+        # Check if all input boxes have values before proceeding
+        for input_box in self.input_boxes:
+            if not input_box.text():
+                QMessageBox.warning(self, "Warning", "Please fill in all input boxes before solving.")
+                return
+
+        # Extract data from input boxes
+        employee_numbers = [int(box.text()) for box in self.input_boxes]
+
+        # Implement your actual solution logic here
+        # This is a placeholder example, replace it with your algorithm
+        # The solution should calculate the minimum number of employees needed
+        # based on the provided employee numbers and working days
+        # ... (your solution logic here) ...
+
+        # Display the solution
+        message = f"The minimum number of employees needed is "
+        QMessageBox.information(self, "Solution", message)
+
+    def set_background_image(self, image_path):
+        self.setAutoFillBackground(True)
+        palette = self.palette()
+        palette.setBrush(QPalette.Window, QBrush(QPixmap("Background_Image.jpg").scaled(self.size())))
+        self.setPalette(palette)
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = MyWindow()
-    win.show()
+    ex = ExerciseSolver()
     sys.exit(app.exec_())
