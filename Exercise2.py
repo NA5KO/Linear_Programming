@@ -82,13 +82,19 @@ class Exercise2(QMainWindow):
         # Exit Button
         exit_button = QPushButton("Exit", self)
         exit_button.setFont(QFont("Arial", 16))
-        exit_button.setStyleSheet("background-color: #FF4949; color: white; border: 1px solid white ; border-radius: 10px; active {background-color: #FF4949;}")
+        exit_button.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
         exit_button.clicked.connect(exit_program)
 
         # Solve Button
         solve_button = QPushButton("Solve", self)
         solve_button.setFont(QFont("Arial", 16))
-        solve_button.setStyleSheet("background-color: #FF4949; color: white; border: 1px solid white ; border-radius: 10px; active {background-color: #FF4949;}")
+        solve_button.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
         # Connect solve_button to a solve function if needed
 
         # Layout for exit and solve buttons
@@ -99,6 +105,14 @@ class Exercise2(QMainWindow):
 
         # Add buttons layout to the content widget
         content_layout.addLayout(buttons_layout)
+
+    def get_input_values(self):
+        input_values = {}
+        line_edits = self.findChildren(QLineEdit)
+        for line_edit in line_edits:
+            input_values[line_edit.objectName()] = line_edit.text()
+        return input_values
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

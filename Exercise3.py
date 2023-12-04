@@ -1,7 +1,10 @@
 import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap, QPalette, QBrush, QIntValidator, QIcon
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox ,QHBoxLayout
+
+def exit_program():
+    app.quit()
 
 
 class Exercise3(QMainWindow):
@@ -18,25 +21,25 @@ class Exercise3(QMainWindow):
         self.set_background_image(background_image_path)
 
         # Big title "Enoncé"
-        title_label = QLabel("Enoncé")
-        title_label.setFont(QFont("Roboto", 20))
-        title_label.setStyleSheet("color: red;")
+        title_label = QLabel("Wording :")
+        title_label.setFont(QFont("Roboto", 30))
+        title_label.setStyleSheet("color: #FF4949;")
 
         # Exercise text
-        exercise_text = "Un bureau de poste a des besoins en personnel lors des sept jours de la semaine\nDéterminer la planification permettant de satisfaire les besoins du bureau en recourant\nau minimum d’employés\ntout en sachant que chaque employé doit travailler pendant\ncinq jours consécutifs avant de prendre deux jours de\ncongé"
+        exercise_text = " A post office has staffing needs for the seven days of the week.\n Determine the schedule that satisfies the office's needs with the minimum number of employees,\n knowing that each employee must work for five consecutive days before taking two days off"
         exercise_label = QLabel(exercise_text)
 
         exercise_label.setFont(QFont("Roboto", 12))
         exercise_label.setStyleSheet("color: white;")
 
         # Sentences and input boxes
-        jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+        jours = ["Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday", "Sunday"]
 
         widget = QWidget()
         layout = QVBoxLayout(widget)
 
         for i in range(7):
-            sentence_label = QLabel(f"Nombre d'employés le {jours[i]}: ")
+            sentence_label = QLabel(f"the number of emplyoees of {jours[i]}: ")
             sentence_label.setFont(QFont("Roboto", 15))
             sentence_label.setStyleSheet("color: white;")
 
@@ -54,10 +57,25 @@ class Exercise3(QMainWindow):
         # Solve button with dark blue theme
         solve_button = QPushButton("Solve")
         solve_button.setStyleSheet(
-            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 5px; font-size: 14pt; padding: 10px; }"
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
             "QPushButton:hover { background-color: #003366; }"
         )
+        solve_button.setMaximumWidth(150)
         solve_button.clicked.connect(self.solve_button_clicked)
+
+        exit_button = QPushButton("Exit", self)
+        exit_button.setFont(QFont("Arial", 16))
+        exit_button.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
+        exit_button.setMaximumWidth(150)
+        exit_button.clicked.connect(exit_program)
+
+         # Button layout: Solve and Exit buttons in a horizontal layout
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(solve_button)
+        button_layout.addWidget(exit_button)
 
         # Main layout with vertical alignment
         main_layout = QVBoxLayout()
@@ -65,8 +83,9 @@ class Exercise3(QMainWindow):
         main_layout.setSpacing(10)
         main_layout.addWidget(exercise_label, alignment=Qt.AlignCenter)
         main_layout.addWidget(widget, alignment=Qt.AlignCenter)
-        main_layout.addWidget(solve_button, alignment=Qt.AlignCenter)
+        main_layout.addLayout(button_layout)  # Add the button layout here
         main_layout.setContentsMargins(0, 0, 0, 0)
+
 
 
         # Set the main layout and window properties
@@ -78,6 +97,7 @@ class Exercise3(QMainWindow):
         self.setGeometry(100, 100, 800, 600)
         self.show()
 
+
     def solve_button_clicked(self):
         # Check if all input boxes have values before proceeding
         for input_box in self.input_boxes:
@@ -87,15 +107,10 @@ class Exercise3(QMainWindow):
 
         # Extract data from input boxes
         employee_numbers = [int(box.text()) for box in self.input_boxes]
-
-        # Implement your actual solution logic here
-        # This is a placeholder example, replace it with your algorithm
-        # The solution should calculate the minimum number of employees needed
-        # based on the provided employee numbers and working days
-        # ... (your solution logic here) ...
-
+        import PL3
+        result = int(PL3.solve_linear_programming(employee_numbers))
         # Display the solution
-        message = f"The minimum number of employees needed is "
+        message = f"The minimum number of employees needed is {result}"
         QMessageBox.information(self, "Solution", message)
 
     def set_background_image(self, image_path):
@@ -106,5 +121,6 @@ class Exercise3(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = Exercise3()
+    ex3_window = Exercise3()
+    ex3_window.show()
     sys.exit(app.exec_())

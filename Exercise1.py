@@ -2,11 +2,12 @@ import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette, QBrush, QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QTableWidget, QPushButton, QVBoxLayout, \
-    QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QTableWidget, QPushButton, QVBoxLayout,QHBoxLayout ,QMainWindow
 
+def exit_program():
+    app.quit()
 
-class Exercice1(QMainWindow):
+class Exercise1(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -15,13 +16,13 @@ class Exercice1(QMainWindow):
         background_image_path = "background_image.jpg"
         self.set_background_image(background_image_path)
         # Section 1: Titre
-        self.titre = QLabel("Énoncé", self)
+        self.titre = QLabel("Wording :", self)
         self.titre.setFont(QFont("Roboto", 20, QFont.Bold))
-        self.titre.setStyleSheet("color: red;")
+        self.titre.setStyleSheet("color: #FF4949;")
         self.titre.setAlignment(Qt.AlignCenter)
 
         # Section 2: Introduction et tableau
-        self.introduction = QLabel(" L’Etat tunisien veut mettre en valeur une zone agricole de 1000 hectares ou cinq cultures sont à priori possibles :\n le blé, l’orge, le mais, la betterave à sucre et le tournesol. On dispose des données suivantes sur les cinq cultures")
+        self.introduction = QLabel(" The Tunisian state wants to develop an agricultural area of ​​1000 hectares where five crops are potentially possible \n wheat, barley, corn, sugar beet, and sunflower. We have the following data on these five crops")
         self.introduction.setFont(QFont("Roboto", 10))
         self.introduction.setStyleSheet("color: white;")
         self.tableau = QTableWidget(7, 5)
@@ -49,13 +50,23 @@ class Exercice1(QMainWindow):
         self.saisie3.setAlignment(Qt.AlignCenter)
 
         # Section 4: Bouton
-        self.bouton = QPushButton("Résoudre", self)
-        self.bouton.setStyleSheet("color: red")
+        self.bouton = QPushButton("Solve", self)
+        self.bouton.setStyleSheet("color: #FF4949")
         self.bouton.setStyleSheet(
             "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
             "QPushButton:hover { background-color: #003366; }"
         )
         self.bouton.setMaximumWidth(150)
+
+
+        self.exit_button = QPushButton("Exit", self)
+        self.exit_button.setFont(QFont("Arial", 16))
+        self.exit_button.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
+        self.exit_button.clicked.connect(exit_program)
+        self.exit_button.setMaximumWidth(150)
 
         # Mise en page
         central_widget = QWidget()
@@ -71,7 +82,12 @@ class Exercice1(QMainWindow):
         layout.addWidget(self.ligne3, alignment=Qt.AlignCenter)
         layout.addWidget(self.saisie3, alignment=Qt.AlignCenter)
         layout.setSpacing(10)
-        layout.addWidget(self.bouton, alignment=Qt.AlignCenter)
+
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.bouton)
+        button_layout.addWidget(self.exit_button)
+
+        layout.addLayout(button_layout)
 
         self.setWindowIcon(QIcon("star.png"))
         self.setWindowTitle("PL1")
@@ -88,6 +104,6 @@ class Exercice1(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = Exercice1()
-    ex.show()
+    ex1_window = Exercise1()
+    ex1_window.show()
     sys.exit(app.exec_())
