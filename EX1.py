@@ -1,8 +1,14 @@
 import gurobipy as gp
 from gurobipy import GRB
 
-# Liste des noms des cultures
-cultures = ["ble", "orge", "mais", "bet-sucre", "tournesol"]
+# Demander à l'utilisateur de saisir le nombre de cultures
+nombre_cultures = int(input("Entrez le nombre de cultures : "))
+
+# Liste pour stocker les noms des cultures
+cultures = []
+for i in range(nombre_cultures):
+    nom_culture = input(f"Entrez le nom de la culture {i+1}: ")
+    cultures.append(nom_culture)
 
 # Créer un dictionnaire pour mapper les noms des cultures à leurs indices
 indices_cultures = {culture: i for i, culture in enumerate(cultures)}
@@ -34,6 +40,7 @@ CM = float(input("Entrez la valeur pour CM: "))
 # Demander à l'utilisateur de saisir la valeur pour CE
 CE = float(input("Entrez la valeur pour CE: "))
 
+# Demander à l'utilisateur de saisir les valeurs pour les contraintes
 temps_machine_limit = float(input("Entrez la limite pour la contrainte Temps Machine: "))
 main_oeuvre_limit = float(input("Entrez la limite pour la contrainte Main d'oeuvre: "))
 eau_limit = float(input("Entrez la limite pour la contrainte Eau: "))
@@ -69,4 +76,4 @@ model.optimize()
 for var in model.getVars():
     print(var.varName, '=', var.x)
 
-print("Objective value =", "{:.2f}".format(model.objVal))
+print("Objective value =", model.objVal)
