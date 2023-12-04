@@ -1,8 +1,9 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget , QStackedWidget
 from PyQt5.QtGui import QPixmap, QFont , QPalette, QBrush 
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
+import Exercise2
 
 def exit_program():
     app.quit()
@@ -11,7 +12,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowIcon(QtGui.QIcon('download.png'))
+        self.setWindowIcon(QtGui.QIcon('Star.png'))
         self.setWindowTitle("Python LP Exercises With Gurobi")
 
         # Set window size and position
@@ -25,7 +26,7 @@ class MainWindow(QMainWindow):
         # Apply background image to window using stylesheet
         self.setAutoFillBackground(True)
         palette = self.palette()
-        palette.setBrush(QPalette.Window, QBrush(QPixmap("tech-background-1l29np90hcci8axg.jpg").scaled(self.size())))
+        palette.setBrush(QPalette.Window, QBrush(QPixmap("background_image.jpg").scaled(self.size())))
         self.setPalette(palette)
 
         # Project Name in the middle at the top
@@ -47,46 +48,6 @@ class MainWindow(QMainWindow):
         self.exercise_layout.setAlignment(Qt.AlignHCenter)
 
         # Function to handle exercise selection
-        def select_exercise():
-            case = exercise_button.text()
-            if case == "Optimise Argiculture Zone":
-                from Exercice1 import Exercice1
-                self.exercice1 = Exercice1()
-                self.exercice1.show()
-            elif case == "Manage production of a company":
-                from Exercice2 import Exercice2
-                self.exercice2 = Exercice2()
-                self.exercice2.show()
-            elif case == "Planify the needs of human ressources":
-                from Exercice3 import Exercice3
-                self.exercice3 = Exercice3()
-                self.exercice3.show()
-            elif case == "choice of location of bank branches":
-                from Exercice4 import Exercice4
-                self.exercice4 = Exercice4()
-                self.exercice4.show()
-            elif case == "Positioning Problem":
-                from Exercice5 import Exercice5
-                self.exercice5 = Exercice5()
-                self.exercice5.show()
-            elif case == "Netwrok Flow Problem":
-                from Exercice6 import Exercice6
-                self.exercice6 = Exercice6()
-                self.exercice6.show()
-            elif case == "Exercise 7":
-                from Exercice7 import Exercice7
-                self.exercice7 = Exercice7()
-                self.exercice7.show()
-            elif case == "Exercise 8":
-                from Exercice8 import Exercice8
-                self.exercice8 = Exercice8()
-                self.exercice8.show()
-            elif case == "Exercise 9":
-                from Exercice9 import Exercice9
-                self.exercice9 = Exercice9()
-                self.exercice9.show()
-            else:
-                pass
 
         # Example buttons for exercises
         Exercise_names = [
@@ -96,16 +57,13 @@ class MainWindow(QMainWindow):
     "choice of location of bank branches",
     "Positioning Problem",
     "Netwrok Flow Problem",
-    "Exercise 7",
-    "Exercise 8",
-    "Exercise 9"
     ]
         for exercise_name in Exercise_names:
             exercise_button = QPushButton(exercise_name, self)
             exercise_button.setFont(QFont("Arial", 12))
             exercise_button.setStyleSheet("background-color: white; color: black; border: 1px solid white ; border-radius: 10px ; active {background-color: #FF4949;}")
             exercise_button.setFixedSize(600, 40)
-            exercise_button.clicked.connect(select_exercise)
+            exercise_button.clicked.connect(lambda checked, btn=exercise_button: self.select_exercise(btn))
             self.exercise_layout.addWidget(exercise_button)
 
         # Arrange buttons in 3 rows at the center
@@ -140,6 +98,37 @@ class MainWindow(QMainWindow):
         layout.addLayout(exit_layout)
         layout.addWidget(self.collaborators)
         self.setCentralWidget(central_widget)
+
+
+    def select_exercise(self, exercise_button):
+        case = exercise_button.text()
+        if case == "Optimise Argiculture Zone":
+            from Exercise1 import Exercise1
+            self.exercice1 = Exercise1()
+            self.exercice1.show()
+        elif case == "Manage production of a company":
+            from Exercise2 import Exercise2
+            self.exercise2 = Exercise2()
+            self.exercise2.show()
+        elif case == "Planify the needs of human ressources":
+            from Exercise3 import Exercise3
+            self.exercise3 = Exercise3()
+            self.exercise3.show()
+            #elif case == "choice of location of bank branches":
+            #    from Exercice4 import Exercice4
+            #    self.exercice4 = Exercice4()
+             #   self.exercice4.show()
+            #elif case == "Positioning Problem":
+             #   from Exercice5 import Exercice5
+             #   self.exercice5 = Exercice5()
+             #   self.exercice5.show()
+            #elif case == "Netwrok Flow Problem":
+              #  from Exercice6 import Exercice6
+              #  self.exercice6 = Exercice6()
+             #   self.exercice6.show()
+        else:
+            pass
+ 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

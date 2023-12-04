@@ -4,7 +4,7 @@ from PyQt5.QtGui import QFont, QPixmap, QPalette, QBrush, QIntValidator, QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 
 
-class ExerciseSolver(QMainWindow):
+class Exercise3(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -73,7 +73,7 @@ class ExerciseSolver(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
-        self.setWindowIcon(QIcon("star.jpg"))
+        self.setWindowIcon(QIcon("star.png"))
         self.setWindowTitle("Exercise Solver")
         self.setGeometry(100, 100, 800, 600)
         self.show()
@@ -106,5 +106,5 @@ class ExerciseSolver(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = ExerciseSolver()
+    ex = Exercise3()
     sys.exit(app.exec_())

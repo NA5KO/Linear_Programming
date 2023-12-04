@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QTableWidg
     QMainWindow
 
 
-class App(QWidget):
+class Exercice1(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -58,20 +58,22 @@ class App(QWidget):
         self.bouton.setMaximumWidth(150)
 
         # Mise en page
-        layout = QVBoxLayout()
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout(central_widget)
         layout.addWidget(self.titre)
         layout.addWidget(self.introduction)
         layout.addWidget(self.tableau)
-        layout.addWidget(self.ligne1,alignment=Qt.AlignCenter)
-        layout.addWidget(self.saisie1,alignment=Qt.AlignCenter)
-        layout.addWidget(self.ligne2,alignment=Qt.AlignCenter)
-        layout.addWidget(self.saisie2,alignment=Qt.AlignCenter)
-        layout.addWidget(self.ligne3,alignment=Qt.AlignCenter)
-        layout.addWidget(self.saisie3,alignment=Qt.AlignCenter)
+        layout.addWidget(self.ligne1, alignment=Qt.AlignCenter)
+        layout.addWidget(self.saisie1, alignment=Qt.AlignCenter)
+        layout.addWidget(self.ligne2, alignment=Qt.AlignCenter)
+        layout.addWidget(self.saisie2, alignment=Qt.AlignCenter)
+        layout.addWidget(self.ligne3, alignment=Qt.AlignCenter)
+        layout.addWidget(self.saisie3, alignment=Qt.AlignCenter)
         layout.setSpacing(10)
-        layout.addWidget(self.bouton,alignment=Qt.AlignCenter)
-        self.setLayout(layout)
-        self.setWindowIcon(QIcon("star.jpg"))
+        layout.addWidget(self.bouton, alignment=Qt.AlignCenter)
+
+        self.setWindowIcon(QIcon("star.png"))
         self.setWindowTitle("PL1")
         self.resize(800, 600)
 
@@ -86,6 +88,6 @@ class App(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = App()
+    ex = Exercice1()
     ex.show()
     sys.exit(app.exec_())
