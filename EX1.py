@@ -10,6 +10,9 @@ for i in range(nombre_cultures):
     nom_culture = input(f"Entrez le nom de la culture {i+1}: ")
     cultures.append(nom_culture)
 
+# Demander à l'utilisateur de saisir la limite pour la contrainte Superficie Totale
+superficie_totale_limit = float(input("Entrez la limite pour la contrainte Superficie Totale: "))
+
 # Créer un dictionnaire pour mapper les noms des cultures à leurs indices
 indices_cultures = {culture: i for i, culture in enumerate(cultures)}
 
@@ -67,10 +70,15 @@ SE = 0
 for i, culture in enumerate(cultures):
     SE += x[i] * E[i]
 
+Nombrehectares= 0
+for i, culture in enumerate(cultures):
+    Nombrehectares += x[i] 
+
 model.setObjective(fct, GRB.MAXIMIZE)
 model.addConstr(ST <= temps_machine_limit, "Temps Machine")
 model.addConstr(SMO <= main_oeuvre_limit, "Main d'oeuvre")
 model.addConstr(SE <= eau_limit, "Eau")
+model.addConstr(Nombrehectares <= superficie_totale_limit , "Superficie du terrain ")
 model.optimize()
 
 for var in model.getVars():
