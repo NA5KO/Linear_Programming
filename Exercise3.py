@@ -123,4 +123,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex3_window = Exercise3()
     ex3_window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

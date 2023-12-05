@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QLineEdit, QHBoxLayout 
-from PyQt5.QtGui import QFont, QPalette, QBrush, QPixmap, QDoubleValidator, QIntValidator ,QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QLineEdit, QHBoxLayout  ,QMessageBox
+from PyQt5.QtGui import QFont, QPalette, QBrush, QPixmap, QDoubleValidator, QIntValidator ,QIcon ,QValidator 
 from PyQt5.QtCore import Qt
 
 def exit_program():
@@ -42,13 +42,13 @@ class Exercise2(QMainWindow):
 
         # Add your labels and line edits here...
         input_labels = [
-            "Months 1:", "Months 2:", "Months 3:", "Months 4:", "Months 5:", "Months 6:", "Months 7:", "Months 8:",
-            "Months 9:", "Months 10:", "Months 11:", "Months 12:",
-            "Initial Stock:", "Initial Employee Number:", "Salary of Employee:",
-            "Employee Hours/M", "Max Supp Hours:",
-            "Price of Supp Hour:", "Hours for pair :",
-            "Price of one pair prod:", "Recruitment Fees:", "Licensing Fees:",
-            "Stocking Fees:"
+            "Months 1", "Months 2", "Months 3", "Months 4", "Months 5", "Months 6", "Months 7", "Months 8",
+            "Months 9", "Months 10", "Months 11", "Months 12",
+            "Stock", "Initial Employee Number", "Salary of Employee",
+            "Employee Hours/M", "Max Supp Hours",
+            "Price of Supp Hour", "Hours for pair",
+            "Price of one pair prod", "Recruitment Fees", "Licensing Fees",
+            "Stocking Fees"
         ]
 
         rows = len(input_labels) // 2 + len(input_labels) % 2
@@ -58,11 +58,11 @@ class Exercise2(QMainWindow):
             for column in range(2):
                 index = row * 2 + column
                 if index < len(input_labels):
-                    label = QLabel(input_labels[index], self)
+                    label = QLabel(input_labels[index]+ ":", self)
                     label.setFont(QFont("Arial", 12))
                     label.setStyleSheet("color: white;")
-
                     line_edit = QLineEdit(self)
+                    line_edit.setObjectName(input_labels[index].strip())
                     line_edit.setFixedSize(200, 25)
 
                     # Set validator for line edit fields to accept only integers or floats
@@ -96,6 +96,7 @@ class Exercise2(QMainWindow):
             "QPushButton:hover { background-color: #003366; }"
         )
         # Connect solve_button to a solve function if needed
+        solve_button.clicked.connect(self.solve_button_clicked)
 
         # Layout for exit and solve buttons
         buttons_layout = QHBoxLayout()
@@ -104,14 +105,32 @@ class Exercise2(QMainWindow):
         buttons_layout.setAlignment(Qt.AlignCenter)
 
         # Add buttons layout to the content widget
-        content_layout.addLayout(buttons_layout)
 
+        content_layout.addLayout(buttons_layout)
     def get_input_values(self):
         input_values = {}
         line_edits = self.findChildren(QLineEdit)
         for line_edit in line_edits:
-            input_values[line_edit.objectName()] = line_edit.text()
+            objectName = line_edit.objectName()
+            input_values[objectName] = line_edit.text()
         return input_values
+        
+    def solve_button_clicked(self):
+        input_values = self.get_input_values()
+        months_demand = {}
+        # Extract month-wise demand values from the input3
+        for month_index in range(1, 13):
+            key = f"Months {month_index}"
+            value = input_values.get(key, 0)  # Assuming default demand is 0 if not entered
+            if value != 0  and len(value) != 0:
+                months_demand[month_index - 1] =int(value)  # Adjust month index to start from 0
+        
+        import PL2
+        # Call the method to solve optimization with collected inputs
+        result = PL2.solve_optimization( input_values, months_demand)
+        message = f"The Optimized value is {result}"
+        # Show the result in a message box
+        QMessageBox.information(self, "Optimized Value", message)
 
 
 if __name__ == "__main__":
