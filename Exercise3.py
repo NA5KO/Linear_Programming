@@ -108,10 +108,19 @@ class Exercise3(QMainWindow):
         # Extract data from input boxes
         employee_numbers = [int(box.text()) for box in self.input_boxes]
         import PL3
-        result = int(PL3.solve_linear_programming(employee_numbers))
+        result , x1,x2,x3,x4,x5,x6,x7 = PL3.solve_linear_programming(employee_numbers)
         # Display the solution
-        message = f"The minimum number of employees needed is {result}"
+        message = f"The minimum number of employees is {result}.\n\n"
+        message += f"Number of employees for each day:\n"
+        message += f"Monday: {x1}\n"
+        message += f"Tuesday: {x2}\n"
+        message += f"Wednesday: {x3}\n"
+        message += f"Thrusday: {x4}\n"
+        message += f"Friday: {x5}\n"
+        message += f"Saturday: {x6}\n"
+        message += f"Sunday: {x7}\n"
         QMessageBox.information(self, "Solution", message)
+
 
     def set_background_image(self, image_path):
         self.setAutoFillBackground(True)
