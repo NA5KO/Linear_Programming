@@ -63,5 +63,13 @@ def solve_optimization(input_values, months_demand):
     # Solve the model
     model.optimize()
 
-    # Return the optimized value
-    return model.objVal 
+    # Return the optimized value and the decison variables 
+    return model.objVal, {
+        "heures_sup": {t: heures_sup[t].x for t in range(nb_mois)},
+        "paires_chaussures": {t: paires_chaussures[t].x for t in range(nb_mois)},
+        "ouvriers_rec": {t: ouvriers_rec[t].x for t in range(nb_mois)},
+        "ouvriers_lic": {t: ouvriers_lic[t].x for t in range(nb_mois)},
+        "ouvriers_dispo": {t: ouvriers_dispo[t].x for t in range(nb_mois)},
+        "stock": {t: stock[t].x for t in range(nb_mois)},
+    }
+   

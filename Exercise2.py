@@ -127,8 +127,12 @@ class Exercise2(QMainWindow):
         
         import PL2
         # Call the method to solve optimization with collected inputs
-        result = PL2.solve_optimization( input_values, months_demand)
-        message = f"The Optimized value is {result}"
+        result , dict = PL2.solve_optimization( input_values, months_demand)
+        # Prepare the message to be shown in the message box
+        message = f"Optimized Profit is : {result}\n"
+        message += "Decision Variables:\n"
+        for key, value in dict.items():
+            message += f"{key}: {value[0]}\n"
         # Show the result in a message box
         QMessageBox.information(self, "Optimized Value", message)
 
