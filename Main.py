@@ -115,17 +115,17 @@ class MainWindow(QMainWindow):
             self.exercise3 = Exercise3()
             self.exercise3.show()
             #elif case == "choice of location of bank branches":
-            #    from Exercice4 import Exercice4
-            #    self.exercice4 = Exercice4()
-             #   self.exercice4.show()
+            #    from Exercise4 import Exercise4
+            #    self.Exercise4 = Exercise4()
+             #   self.Exercise4.show()
             #elif case == "Positioning Problem":
-             #   from Exercice5 import Exercice5
-             #   self.exercice5 = Exercice5()
-             #   self.exercice5.show()
-            #elif case == "Netwrok Flow Problem":
-              #  from Exercice6 import Exercice6
-              #  self.exercice6 = Exercice6()
-             #   self.exercice6.show()
+             #   from Exercise5 import Exercise5
+             #   self.Exercise5 = Exercise5()
+             #   self.Exercise5.show()
+        elif case == "Netwrok Flow Problem":
+            from Exercise6 import Exercise6
+            self.exercise6 = Exercise6()
+            self.exercise6.show()
         else:
             pass
  
