@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 def exit_program():
     app.quit()
 
-class Link:
+class arc:
     def __init__(self, start_node, end_node, duration):
         self.start_node = start_node
         self.end_node = end_node
@@ -31,7 +31,7 @@ class Exercise6(QMainWindow):
         title_label.setStyleSheet("color: #FF4949;")
         title_label.setAlignment(Qt.AlignCenter)
 
-        wording_label = QLabel("Wording: \n Determine the optimal Path From a starting node to an end node  \n Start by first creating your network by adding different links.  \n Every link has a starting node , an ending node and a duration \n", self)
+        wording_label = QLabel("Wording: \n Determine the optimal Path From a starting node to an end node  \n Start by first creating your network by adding different arcs.  \n Every arc has a starting node , an ending node and a duration \n", self)
         wording_label.setFont(QFont("Arial", 15))
         wording_label.setStyleSheet("color: white;")
         wording_label.setAlignment(Qt.AlignCenter)
@@ -42,10 +42,11 @@ class Exercise6(QMainWindow):
         content_layout.addWidget(title_label)
         content_layout.addWidget(wording_label)
 
-        #list of links
-        self.links = []
+        #list of arcs
+        self.arcs = []
+        self.nodes = []
 
-        labels = ["Start Node for the link", "End Node for the link", "Duration for the link"]
+        labels = ["Start Node for the arc", "End Node for the arc", "Duration for the arc"]
 
         for label in labels:
             hbox = QHBoxLayout()
@@ -60,7 +61,7 @@ class Exercise6(QMainWindow):
             line_edit.setStyleSheet("color: black;")
             line_edit.setFont(QFont("Arial", 15))
             line_edit.setMaximumWidth(200)
-            if label == "Start Node for the link" or label == "End Node for the link": 
+            if label == "Start Node for the arc" or label == "End Node for the arc": 
                 #only let him input one letter 
                 line_edit.setMaxLength(1)
             else:
@@ -146,27 +147,52 @@ class Exercise6(QMainWindow):
 
     def add(self):
         input_values = self.get_input_values()
-        start_node = input_values.get("Start Node for the link", "")
-        end_node = input_values.get("End Node for the link", "")
-        duration = input_values.get("Duration for the link", "")
+        start_node = input_values.get("Start Node for the arc", "")
+        end_node = input_values.get("End Node for the arc", "")
+        duration = input_values.get("Duration for the arc", "")
 
         if not (start_node and end_node and duration):
             QMessageBox.about(self, "Error", "Please fill all the fields")
         else:
-            new_link = Link(start_node, end_node, int(duration))
-            self.links.append(new_link)
+            #check if the start node and end node are already in the list of nodes
+            if start_node not in self.nodes:
+                self.nodes.append(start_node)
+            if end_node not in self.nodes:
+                self.nodes.append(end_node)
+            new_arc = arc(start_node, end_node, int(duration))
+            self.arcs.append(new_arc)
             for line_edit in self.findChildren(QLineEdit):
                 line_edit.clear()
 
     def solve(self):
+        #read the start and end node
         input_values = self.get_input_values()
-        if input_values["Start Node for the link"] == "" or input_values["End Node for the link"] == "" or input_values["duration for the link"] == "":
+        start_node = input_values.get("Start Node", "")
+        end_node = input_values.get("End Node", "")
+        if not (start_node and end_node):
             QMessageBox.about(self, "Error", "Please fill all the fields")
         else:
-            self.input_values = input_values
-            self.close()
-            self.exercise = Exercise6()
-            self.exercise.show()
+            #check if the start node and end node are already in the list of nodes
+            if start_node not in self.nodes:
+                QMessageBox.about(self, "Error", "Start Node is not in the list of nodes")
+            elif end_node not in self.nodes:
+                QMessageBox.about(self, "Error", "End Node is not in the list of nodes")
+            else:
+                #create the arcs and durations
+                arcs = []
+                durations = {}
+                for arc in self.arcs:
+                    arcs.append((arc.start_node, arc.end_node))
+                    durations[(arc.start_node, arc.end_node)] = arc.duration
+                #call the function to solve the problem
+                import PL6
+                result = PL6.solve_shortest_path(self.nodes, arcs, durations, start_node, end_node)
+                if result:
+                    QMessageBox.about(self, "Result", f"The shortest path from {start_node} to {end_node} is: {result}")
+                    total_duration = sum(durations[arc] for arc in result)
+                    QMessageBox.about(self, "Result", f"Total duration: {total_duration}")
+                else:
+                    QMessageBox.about(self, "Result", "No feasible solution found.")
 
 
 
