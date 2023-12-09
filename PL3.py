@@ -1,6 +1,5 @@
 from gurobipy import *
 
-
 def solve_linear_programming(input_values):
     m = Model(name="PL3")
 
@@ -31,4 +30,6 @@ def solve_linear_programming(input_values):
 
     # Retrieve and print the optimal solution
     optimal_value = m.objVal
-    return optimal_value
+    # retunr the optimal solution as well as the values of the decision variables
+    return int(optimal_value), int(x1.x), int(x2.x), int(x3.x), int(x4.x), int(x5.x), int(x6.x), int(x7.x)
+
