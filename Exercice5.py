@@ -1,0 +1,186 @@
+import sys
+from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import QFont, QPalette, QBrush, QPixmap, QIntValidator, QIcon, QRegExpValidator
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
+
+
+def exit_program():
+    app.quit()
+
+
+class ExerciseInterface(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.input_boxes = []
+        self.zone_data = []
+        self.init_ui()
+
+    def init_ui(self):
+        background_image_path = "background_image.jpg"
+        self.set_background_image(background_image_path)
+
+        # Section 0: Grand Titre
+        self.titre = QLabel("Wording :", self)
+        self.titre.setFont(QFont("Roboto", 20, QFont.Bold))
+        self.titre.setStyleSheet("color: #FF4949;")
+        self.titre.setAlignment(Qt.AlignCenter)
+
+        # Section 1: Description de l'exercice
+        self.introduction = QLabel(
+            " A telecommunications company specializing in mobile phones is newly installed in a country whose map is presented below.\n Emission antennas can be placed on sites A, ..., G located on the common borders of the different zones of the country.\n An antenna placed on a given site can cover the two zones whose common border houses this site.\n The company's goal is to ensure at the lowest cost the coverage of each zone with at least one antenna while covering zone 4 with at least two antennas.",
+            self)
+        self.introduction.setFont(QFont("Roboto", 10))
+        self.introduction.setStyleSheet("color: white;")
+
+        # Section 2: 3 lignes avec des Input Boxes
+        petit_titre = ["The zone number", "The number of antennas required to cover a given area",
+                       "The site that surrounds the zone"]
+
+        self.widget = QWidget()
+        layout = QVBoxLayout(self.widget)
+
+        for i in range(3):
+            sentence_label = QLabel(f"{petit_titre[i]}: ")
+            sentence_label.setFont(QFont("Roboto", 14))
+            sentence_label.setStyleSheet("color: white;")
+
+            input_box = QLineEdit(self)
+
+            if i == 2:  # Configure input box for sites (The site that surrounds the zone)
+                input_box.setMaxLength(20)  # Adjust the maximum length as needed
+                input_box.setValidator(QRegExpValidator(QRegExp("^['A-G',]*$")))  # Allow only A-G and commas
+            else:
+                input_box.setMaxLength(3)
+                input_box.setValidator(QIntValidator(1, 999))
+
+            input_box.setMaximumWidth(150)  # Adjust the width as needed
+            input_box.setAlignment(Qt.AlignCenter)
+
+            self.input_boxes.append(input_box)
+
+            line_layout = QHBoxLayout()
+            line_layout.addWidget(sentence_label, alignment=Qt.AlignCenter)
+            line_layout.addWidget(input_box, alignment=Qt.AlignCenter)
+
+            layout.addLayout(line_layout)
+
+        # Section 3: 3 Boutons
+        self.solve_bouton = QPushButton("Solve", self)
+        self.solve_bouton.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
+        self.solve_bouton.setMaximumWidth(125)
+        self.solve_bouton.clicked.connect(self.on_solve_clicked)
+
+        self.add_zone_bouton = QPushButton("Add zone", self)
+        self.add_zone_bouton.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
+        self.add_zone_bouton.setMaximumWidth(125)
+        self.add_zone_bouton.clicked.connect(self.on_add_zone_clicked)
+
+        self.exit_button = QPushButton("Exit", self)
+        self.exit_button.setFont(QFont("Arial", 16))
+        self.exit_button.setStyleSheet(
+            "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
+            "QPushButton:hover { background-color: #003366; }"
+        )
+        self.exit_button.clicked.connect(exit_program)
+        self.exit_button.setMaximumWidth(125)
+
+        # Layout
+        main_layout = QVBoxLayout()
+
+        # Section 0
+        main_layout.addWidget(self.titre)
+
+        # Section 1
+        main_layout.addWidget(self.introduction)
+
+        # Section 2
+        main_layout.addWidget(self.widget)
+
+        # Section 3
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.add_zone_bouton)
+        button_layout.addWidget(self.solve_bouton)
+        button_layout.addWidget(self.exit_button)
+
+        # Add some spacing between Section 2 and Section 3
+        main_layout.addSpacing(15)
+        main_layout.addLayout(button_layout)
+
+        self.setLayout(main_layout)
+        self.setWindowIcon(QIcon("star.png"))
+        self.setGeometry(200, 200, 800, 400)
+        self.setWindowTitle("Exercise Interface")
+        self.show()
+
+    def set_background_image(self, image_path):
+        self.setAutoFillBackground(True)
+        palette = self.palette()
+        palette.setBrush(QPalette.Window, QBrush(QPixmap("Background_Image.jpg").scaled(self.size())))
+        self.setPalette(palette)
+
+    def on_add_zone_clicked(self):
+        # Check if any input box is empty
+        if any(input_box.text().strip() == '' for input_box in self.input_boxes):
+            QMessageBox.warning(self, "Empty Input", "Please fill in all the input boxes.")
+            return
+
+        # Retrieve data from input boxes and construct the desired data structure
+        zone_number = int(self.input_boxes[0].text())
+        antennas_required = int(self.input_boxes[1].text())
+        sites_surrounding = [site.strip("'") for site in self.input_boxes[2].text().split(',')]
+
+        # Check if the zone number already exists
+        if any(zone[1] == zone_number for zone in self.zone_data):
+            QMessageBox.warning(self, "Duplicate Zone Number",
+                                "Zone number already exists. Please choose a different zone number.")
+        else:
+            # Create a list representing the data structure
+            zone_data_item = [sites_surrounding, zone_number, antennas_required]
+
+            # Append the item to the main list
+            self.zone_data.append(zone_data_item)
+
+            # Clear input boxes
+            for input_box in self.input_boxes:
+                input_box.clear()
+
+            # Print the resulting data structure (for demonstration purposes)
+            print((self.zone_data))
+
+    def on_solve_clicked(self):
+        # Check if zone_data is empty
+        if not self.zone_data:
+            QMessageBox.warning(self, "Empty Zone", "Please add zones before solving.")
+            return
+
+        # Call the solve_coverage_problem method with zone_data
+        from PL5 import solve_coverage_problem
+        result = solve_coverage_problem(self.zone_data)
+        self.zone_data = []
+        if result is not None:
+            # Display the result in a message box
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setWindowTitle("Optimal Solution")
+            msg_box.setText("Optimal Solution:\n")
+            for entry in result:
+                msg_box.setText(msg_box.text() + f"Site {entry['Site']}: Antenna = {entry['Antenna']}\n")
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setFixedHeight(500)
+            msg_box.setFixedWidth(300)
+            msg_box.exec_()
+        else:
+            # Display a message box if there is no optimal solution
+            QMessageBox.warning(self, "No Optimal Solution", "No optimal solution found.")
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = ExerciseInterface()
+    sys.exit(app.exec_())
