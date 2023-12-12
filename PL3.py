@@ -1,6 +1,5 @@
 from gurobipy import *
 
-
 def solve_linear_programming(input_values):
     m = Model(name="PL3")
 
