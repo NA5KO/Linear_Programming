@@ -6,18 +6,22 @@ import numpy as np
 def construct_symmetric_matrix(n):
     matrix = np.zeros((n, n), dtype=int)
     for i in range(n):
-        for j in range(i+1): # we only need to fill the upper triangle
-            while True: # Keep asking for input until the user enters a valid input
-                try:
-                    response = int(input(f"Est-ce que la région {i+1} est voisine de la région {j+1} ? (1 pour oui, 0 pour non) : "))
-                    if response == 1 or response == 0:
-                        matrix[i][j] = response
-                        break # Exit the loop if the user entered a valid input
-                    else:
+        for j in range(i+1):  # we only need to fill the upper triangle
+            if i == j:
+                matrix[i][j] = 1  # Setting diagonal elements to 1
+            else:
+                while True:
+                    try:
+                        response = int(input(f"Est-ce que la région {i+1} est voisine de la région {j+1} ? (1 pour oui, 0 pour non) : "))
+                        if response == 1 or response == 0:
+                            matrix[i][j] = response
+                            matrix[j][i] = response  # Symmetric entry
+                            break
+                        else:
+                            print("Veuillez entrer 1 ou 0.")
+                    except ValueError:
                         print("Veuillez entrer 1 ou 0.")
-                except ValueError:
-                    print("Veuillez entrer 1 ou 0.")
-    return matrix + matrix.T - np.diag(matrix.diagonal())
+    return matrix
 
 def solve_agency_location_problem(num_regions, B, K, D, a, b, c, A, population):
     # Création du modèle
