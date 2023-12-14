@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTableWidget, QSpinBo
 def exit_program():
     app.quit()
 
-class Exercise1(QMainWindow):
+class Exercise4(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -204,6 +204,6 @@ class Exercise1(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex1_window = Exercise1()
+    ex1_window = Exercise4()
     ex1_window.show()
     sys.exit(app.exec_())
