@@ -52,7 +52,14 @@ def solve_agency_location_problem(num_regions, B, K, D, a, b, c, A, population):
             "Serveur_DAB": int(y[i].getAttr('X'))
         }
         results["regions"].append(region_result)
-    
+    if model.status == GRB.OPTIMAL:
+        print("Optimal solution found!")
+    elif model.status == GRB.INFEASIBLE:
+        print("The model is infeasible.")
+    elif model.status == GRB.UNBOUNDED:
+        print("The model is unbounded.")
+    else:
+        print("Optimization ended with status:", model.status)
     results["Objective_value"] = model.objVal
 
     return results
@@ -72,6 +79,7 @@ for i in range(num_regions):
     population.append(pop)
 
 result = solve_agency_location_problem(num_regions, B, K, D, a, b, c, A, population)
+    # Print the status of the optimization
 print("Solution optimale:")
 for region_result in result["regions"]:
     print(f"Région {region_result['Region']}: Agence={region_result['Agence']}, Serveur DAB={region_result['Serveur_DAB']}")
