@@ -69,6 +69,7 @@ def solve_agency_location_problem(num_regions, B, K, D, a, b, c, A, population):
     return results
 
 # Exemple d'utilisation:
+
 num_regions = int(input("Nombre de régions : "))
 B = float(input("Budget total (B) : "))
 K = float(input("Coût d'ouverture d'une agence (K) : "))
