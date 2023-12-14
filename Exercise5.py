@@ -1,14 +1,15 @@
 import sys
 from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QFont, QPalette, QBrush, QPixmap, QIntValidator, QIcon, QRegExpValidator
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, \
+    QMessageBox, QMainWindow
 
 
 def exit_program():
-    app.quit()
+    QApplication.quit()
 
 
-class ExerciseInterface(QWidget):
+class Exercise5(QMainWindow):
     def __init__(self):
         super().__init__()
         self.input_boxes = []
@@ -17,7 +18,8 @@ class ExerciseInterface(QWidget):
 
     def init_ui(self):
         background_image_path = "background_image.jpg"
-        self.set_background_image(background_image_path)
+        if not self.set_background_image(background_image_path):
+            sys.exit("Error loading background image.")
 
         # Section 0: Grand Titre
         self.titre = QLabel("Wording :", self)
@@ -37,7 +39,7 @@ class ExerciseInterface(QWidget):
                        "The site that surrounds the zone"]
 
         self.widget = QWidget()
-        layout = QVBoxLayout(self.widget)
+        line_layout = QHBoxLayout()
 
         for i in range(3):
             sentence_label = QLabel(f"{petit_titre[i]}: ")
@@ -58,11 +60,9 @@ class ExerciseInterface(QWidget):
 
             self.input_boxes.append(input_box)
 
-            line_layout = QHBoxLayout()
             line_layout.addWidget(sentence_label, alignment=Qt.AlignCenter)
             line_layout.addWidget(input_box, alignment=Qt.AlignCenter)
 
-            layout.addLayout(line_layout)
 
         # Section 3: 3 Boutons
         self.solve_bouton = QPushButton("Solve", self)
@@ -91,38 +91,33 @@ class ExerciseInterface(QWidget):
         self.exit_button.setMaximumWidth(125)
 
         # Layout
-        main_layout = QVBoxLayout()
-
-        # Section 0
-        main_layout.addWidget(self.titre)
-
-        # Section 1
-        main_layout.addWidget(self.introduction)
-
-        # Section 2
-        main_layout.addWidget(self.widget)
-
-        # Section 3
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout(central_widget)
+        layout.addWidget(self.titre)
+        layout.addWidget(self.introduction)
+        layout.addLayout(line_layout)
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.add_zone_bouton)
         button_layout.addWidget(self.solve_bouton)
         button_layout.addWidget(self.exit_button)
 
-        # Add some spacing between Section 2 and Section 3
-        main_layout.addSpacing(15)
-        main_layout.addLayout(button_layout)
+        layout.addLayout(button_layout)
 
-        self.setLayout(main_layout)
         self.setWindowIcon(QIcon("star.png"))
-        self.setGeometry(200, 200, 800, 400)
-        self.setWindowTitle("Exercise Interface")
-        self.show()
+        self.setWindowTitle("PL1")
+        self.resize(400, 600)
 
     def set_background_image(self, image_path):
-        self.setAutoFillBackground(True)
-        palette = self.palette()
-        palette.setBrush(QPalette.Window, QBrush(QPixmap("Background_Image.jpg").scaled(self.size())))
-        self.setPalette(palette)
+        try:
+            self.setAutoFillBackground(True)
+            palette = self.palette()
+            palette.setBrush(QPalette.Window, QBrush(QPixmap(image_path).scaled(self.size())))
+            self.setPalette(palette)
+            return True
+        except Exception as e:
+            print(f"Error loading background image: {e}")
+            return False
 
     def on_add_zone_clicked(self):
         # Check if any input box is empty
@@ -151,7 +146,7 @@ class ExerciseInterface(QWidget):
                 input_box.clear()
 
             # Print the resulting data structure (for demonstration purposes)
-            print((self.zone_data))
+            print(self.zone_data)
 
     def on_solve_clicked(self):
         # Check if zone_data is empty
@@ -165,22 +160,21 @@ class ExerciseInterface(QWidget):
         self.zone_data = []
         if result is not None:
             # Display the result in a message box
-            msg_box = QMessageBox()
+            msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Information)
             msg_box.setWindowTitle("Optimal Solution")
             msg_box.setText("Optimal Solution:\n")
             for entry in result:
                 msg_box.setText(msg_box.text() + f"Site {entry['Site']}: Antenna = {entry['Antenna']}\n")
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.setFixedHeight(500)
-            msg_box.setFixedWidth(300)
+            msg_box.setIconPixmap(QPixmap("blue_icon.png"))  # Change to the path of your blue icon
+            msg_box.setFixedSize(500, 300)
             msg_box.exec_()
         else:
-            # Display a message box if there is no optimal solution
+                # Display a message box if there is no optimal solution
             QMessageBox.warning(self, "No Optimal Solution", "No optimal solution found.")
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = ExerciseInterface()
+    ex5_window = Exercise5()
+    ex5_window.show()
     sys.exit(app.exec_())
