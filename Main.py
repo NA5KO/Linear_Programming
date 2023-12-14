@@ -118,10 +118,10 @@ class MainWindow(QMainWindow):
             #    from Exercise4 import Exercise4
             #    self.Exercise4 = Exercise4()
              #   self.Exercise4.show()
-            #elif case == "Positioning Problem":
-             #   from Exercise5 import Exercise5
-             #   self.Exercise5 = Exercise5()
-             #   self.Exercise5.show()
+        elif case == "Positioning Problem":
+            from Exercise5 import Exercise5
+            self.exercise5 = Exercise5()
+            self.exercise5.show()
         elif case == "Netwrok Flow Problem":
             from Exercise6 import Exercise6
             self.exercise6 = Exercise6()
