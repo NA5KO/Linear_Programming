@@ -27,7 +27,7 @@ class Exercise2(QMainWindow):
         title_label.setAlignment(Qt.AlignCenter)
 
         # Wording label
-        wording_label = QLabel("Wording: \n Determine the optimal production schedule and the best policy for managing the workforce \n by Determining for how long you will be working,staff salary ,Supp hours   \n Working cost ,initial staff , working hours , hours per product ... \n", self)
+        wording_label = QLabel("Wording: \n Determine the optimal production schedule and the best policy for managing the workforce \n by Determining for how long you will be working,staff salary ,Supp hours   \n Working cost ,initial staff , working hours , hours per product ... \n you should only enter secussive months ", self)
         wording_label.setFont(QFont("Arial", 15))
         wording_label.setStyleSheet("color: white;")
         wording_label.setAlignment(Qt.AlignCenter)
