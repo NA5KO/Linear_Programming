@@ -23,25 +23,31 @@ class Exercise5(QMainWindow):
 
         # Section 0: Grand Titre
         self.titre = QLabel("Wording :", self)
-        self.titre.setFont(QFont("Roboto", 20, QFont.Bold))
+        self.titre.setFont(QFont("Roboto", 30, QFont.Bold))
         self.titre.setStyleSheet("color: #FF4949;")
         self.titre.setAlignment(Qt.AlignCenter)
 
         # Section 1: Description de l'exercice
         self.introduction = QLabel(
-            " A telecommunications company specializing in mobile phones is newly installed in a country whose map is presented below.\n Emission antennas can be placed on sites A, ..., G located on the common borders of the different zones of the country.\n An antenna placed on a given site can cover the two zones whose common border houses this site.\n The company's goal is to ensure at the lowest cost the coverage of each zone with at least one antenna while covering zone 4 with at least two antennas.",
+            " A telecommunications company specializing in mobile phones is newly installed in a country \n whose map is presented below.Emission antennas can be placed on sites A, ..., G \n located on the common borders of the different zones of the country.\n An antenna placed on a given site can cover the two zones whose common border houses this site.\n The company's goal is to ensure at the lowest cost the coverage of each zone\n with at least one antenna while covering zone 4 with at least two antennas.",
             self)
-        self.introduction.setFont(QFont("Roboto", 10))
+        self.introduction.setFont(QFont("Roboto", 12))
         self.introduction.setStyleSheet("color: white;")
 
         # Section 2: 3 lignes avec des Input Boxes
-        petit_titre = ["The zone number", "The number of antennas required to cover a given area",
+        petit_titre = ["The zone number", "Number of antennas required",
                        "The site that surrounds the zone"]
 
+        # Create a widget to contain the rows
         self.widget = QWidget()
-        line_layout = QHBoxLayout()
+
+        # Layout for all rows
+        main_layout = QVBoxLayout(self.widget)
 
         for i in range(3):
+            # Layout for each row
+            row_layout = QHBoxLayout()
+
             sentence_label = QLabel(f"{petit_titre[i]}: ")
             sentence_label.setFont(QFont("Roboto", 14))
             sentence_label.setStyleSheet("color: white;")
@@ -60,9 +66,10 @@ class Exercise5(QMainWindow):
 
             self.input_boxes.append(input_box)
 
-            line_layout.addWidget(sentence_label, alignment=Qt.AlignCenter)
-            line_layout.addWidget(input_box, alignment=Qt.AlignCenter)
+            row_layout.addWidget(sentence_label, alignment=Qt.AlignCenter)
+            row_layout.addWidget(input_box, alignment=Qt.AlignCenter)
 
+            main_layout.addLayout(row_layout)
 
         # Section 3: 3 Boutons
         self.solve_bouton = QPushButton("Solve", self)
@@ -78,7 +85,7 @@ class Exercise5(QMainWindow):
             "QPushButton { background-color: #ff4949; color: white; border: none; border-radius: 20px; font-size: 14pt; padding: 15px; }"
             "QPushButton:hover { background-color: #003366; }"
         )
-        self.add_zone_bouton.setMaximumWidth(125)
+        self.add_zone_bouton.setMaximumWidth(150)
         self.add_zone_bouton.clicked.connect(self.on_add_zone_clicked)
 
         self.exit_button = QPushButton("Exit", self)
@@ -96,7 +103,7 @@ class Exercise5(QMainWindow):
         layout = QVBoxLayout(central_widget)
         layout.addWidget(self.titre)
         layout.addWidget(self.introduction)
-        layout.addLayout(line_layout)
+        layout.addWidget(self.widget)
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.add_zone_bouton)
         button_layout.addWidget(self.solve_bouton)
